@@ -21,23 +21,21 @@ class ArtikelFormScreen extends StatelessWidget {
               const EdgeInsets.only(top: 32, bottom: 16, left: 16, right: 16),
           child: Row(
             mainAxisAlignment:
-                MainAxisAlignment.start, // Align the title to the left
+                MainAxisAlignment.start, 
             children: [
-              // Custom back button
               IconButton(
                 icon: SvgPicture.asset(
-                  'assets/images/back.svg', // Path to your SVG file
+                  'assets/images/back.svg',
                   height: 40,
                   width: 40,
                 ),
                 onPressed: () {
-                  Navigator.pop(context); // Go back to the previous screen
+                  Navigator.pop(context); 
                 },
               ),
-              // Title with added left margin to shift it slightly
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 12.0), // Add left padding to shift title
+                    left: 12.0), 
                 child: Text(
                   'Tambah Artikel',
                   textAlign: TextAlign.center,
@@ -55,7 +53,6 @@ class ArtikelFormScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        // Wrap the body in SingleChildScrollView for scrolling
         padding: const EdgeInsets.all(16.0),
         child: ArtikelFormWidget(
           onSubmit: (artikel) {
