@@ -3,7 +3,7 @@ import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:batikalongan_mobile/config/config.dart';
 class ArtikelFormWidget extends StatefulWidget {
   final void Function(Map<String, String>) onSubmit;
 
@@ -53,7 +53,7 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
         };
 
         final response = await http.post(
-          Uri.parse("http://127.0.0.1:8000/article/create-flutter/"),
+          Uri.parse(Config.baseUrl + "/article/create-flutter/"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(submittedData),
         );

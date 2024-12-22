@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:batikalongan_mobile/auth/screens/login.dart';
+import 'package:batikalongan_mobile/config/config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:batikalongan_mobile/config/config.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -105,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           String password2 = _confirmPasswordController.text;
 
                           final response = await request.postJson(
-                            "http://127.0.0.1:8000/auth/api/register/",
+                            Config.baseUrl + "/auth/api/register/",
                             jsonEncode({
                               "nama": nama,
                               "username": username,
