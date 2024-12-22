@@ -9,6 +9,7 @@ import 'artikel_form_screen.dart';
 import '../widgets/artikel_card.dart';
 import 'package:batikalongan_mobile/article/models/artikel_entry.dart';
 import 'package:batikalongan_mobile/config/config.dart';
+import 'package:batikalongan_mobile/catalog/screens/catalog_product.dart';
 
 class ArtikelScreen extends StatefulWidget {
   const ArtikelScreen({Key? key}) : super(key: key);
@@ -199,13 +200,22 @@ class _ArtikelScreenState extends State<ArtikelScreen>
           if (index == 0) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const CatalogStores()),
+              MaterialPageRoute(builder: (context) => const ProductCatalog()),
             );
+          }
+          if (index == 1) {
+            // Tetap di halaman ini
           }
           if (index == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const GalleryScreen()),
+            );
+          }
+          if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ArtikelScreen()),
             );
           }
           if (index == 4) {

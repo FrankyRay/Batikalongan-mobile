@@ -1,8 +1,9 @@
 import 'package:batikalongan_mobile/catalog/models/catalog_model.dart';
 import 'package:batikalongan_mobile/catalog/screens/store_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:batikalongan_mobile/config/config.dart';
 
-const String baseUrl = 'http://127.0.0.1:8000'; // Ganti dengan URL server Anda.
+const String baseUrl = Config.baseUrl ;
 
 class StoreCard extends StatelessWidget {
   final Store store;

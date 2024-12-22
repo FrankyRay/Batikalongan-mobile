@@ -2,6 +2,7 @@ import 'package:batikalongan_mobile/catalog/models/catalog_model.dart';
 import 'package:batikalongan_mobile/catalog/screens/delete_product.dart';
 import 'package:batikalongan_mobile/catalog/screens/edit_product.dart';
 import 'package:flutter/material.dart';
+import 'package:batikalongan_mobile/config/config.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ProductCard extends StatelessWidget {
@@ -14,7 +15,7 @@ class ProductCard extends StatelessWidget {
 
   void deleteProduct(BuildContext context, String productId) async {
     try {
-      await deleteProductFlutter(productId); // Fungsi delete product
+      await deleteProductFlutter(productId); // Function to delete the product
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Produk berhasil dihapus')),
       );
@@ -41,7 +42,7 @@ class ProductCard extends StatelessWidget {
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(8)),
                 child: Image.network(
-                  product.image,
+                  Config.baseUrl + product.image,
                   height: 150,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -118,7 +119,7 @@ class ProductCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EditProductPage(productId: 'product.id',),
+                      builder: (context) => EditProductPage(productId: product.id),
                     ),
                   );
                 },

@@ -2,10 +2,17 @@ import 'package:batikalongan_mobile/auth/screens/login.dart';
 import 'package:batikalongan_mobile/catalog/models/catalog_model.dart';
 import 'package:batikalongan_mobile/catalog/screens/catalog_store.dart';
 import 'package:batikalongan_mobile/catalog/widgets/product_card.dart';
+import 'package:batikalongan_mobile/widgets/bottom_navbar.dart'; // Import BottomNavbar widget
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:batikalongan_mobile/config/config.dart';
+import 'package:batikalongan_mobile/timeline/screens/timeline_screen.dart';
+import 'package:batikalongan_mobile/gallery/screens/gallery_screen.dart';
+import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';
+
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+
 
 class ProductCatalog extends StatefulWidget {
   const ProductCatalog({Key? key}) : super(key: key);
@@ -16,8 +23,8 @@ class ProductCatalog extends StatefulWidget {
 
 class _ProductCatalogState extends State<ProductCatalog> {
   Future<List<Product>> fetchProducts() async {
-    const String url = 'http://127.0.0.1:8000/catalog/products/json/';
-    const String storeUrl = 'http://127.0.0.1:8000/catalog/json/';
+    const String url = Config.baseUrl + '/catalog/products/json/';
+    const String storeUrl = Config.baseUrl + '/catalog/json/';
 
     // First fetch stores to resolve foreign keys
     final storeResponse = await http.get(Uri.parse(storeUrl));
@@ -37,6 +44,8 @@ class _ProductCatalogState extends State<ProductCatalog> {
 
   int currentPage = 1;
   final int totalPages = 7;
+
+  int _currentIndex = 0; // Set index sesuai dengan halaman "Product Catalog"
 
   @override
   Widget build(BuildContext context) {
@@ -208,28 +217,37 @@ class _ProductCatalogState extends State<ProductCatalog> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart_outlined),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: '',
-          ),
-        ],
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: BottomNavbar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          if (index == 0) {
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => const ProductCatalog()),
+            // );
+          }
+          if (index == 1) {
+            // Tetap di halaman ini
+          }
+          if (index == 2) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const GalleryScreen()),
+            );
+          }
+          if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ArtikelScreen()),
+            );
+          }
+          if (index == 4) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const TimeLineScreen()),
+            );
+          }
+        },
       ),
     );
   }
