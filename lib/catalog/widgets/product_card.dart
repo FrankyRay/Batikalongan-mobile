@@ -1,5 +1,6 @@
 import 'package:batikalongan_mobile/catalog/models/catalog_model.dart';
 import 'package:flutter/material.dart';
+import 'package:batikalongan_mobile/config/config.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -19,7 +20,7 @@ class ProductCard extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
             child: Image.network(
-              product.image,
+              Config.baseUrl + product.image,
               height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
