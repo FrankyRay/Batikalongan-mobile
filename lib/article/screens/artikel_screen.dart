@@ -1,3 +1,4 @@
+import 'package:batikalongan_mobile/catalog/screens/catalog_store.dart';
 import 'package:batikalongan_mobile/gallery/screens/gallery_screen.dart';
 import 'package:batikalongan_mobile/timeline/screens/timeline_screen.dart';
 import 'package:batikalongan_mobile/widgets/bottom_navbar.dart';
@@ -194,7 +195,13 @@ class _ArtikelScreenState extends State<ArtikelScreen>
       bottomNavigationBar: BottomNavbar(
         currentIndex: _currentIndex,
         onTap: (index) {
-          if (index == 1) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const CatalogStores()),
+            );
+          }
+          if (index == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const GalleryScreen()),
