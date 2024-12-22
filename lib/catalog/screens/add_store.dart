@@ -64,10 +64,7 @@ class _AddStorePageState extends State<AddStorePage> {
             );
             Navigator.pop(context);
           } else {
-            print("test");
-            print(request.responseText);
             final response = jsonDecode(request.responseText ?? '{}');
-          
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Gagal menambahkan toko: ${response["message"] ?? "Kesalahan tidak diketahui"}'),
