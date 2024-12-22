@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import '../widgets/gallery_card.dart';
 import '../widgets/pagination_controls.dart';
 import '../services/gallery_service.dart';
 import '../models/gallery_entry.dart';
 import 'edit_entry_screen.dart';
 import 'add_entry_screen.dart';
+import 'delete_entry_screen.dart';
+import 'package:batikalongan_mobile/auth/screens/register.dart';
+import 'package:batikalongan_mobile/screens/main_navigation.dart';
+import 'package:batikalongan_mobile/timeline/screens/timeline_screen.dart';
+import 'package:batikalongan_mobile/widgets/bottom_navbar.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -14,11 +21,12 @@ class GalleryScreen extends StatefulWidget {
 }
 
 class _GalleryScreenState extends State<GalleryScreen> {
-  final GalleryService _service = GalleryService('https://faiz-assabil-batikalongantest.pbp.cs.ui.ac.id'); // Base URL API
+  final GalleryService _service = GalleryService('http://127.0.0.1:8000/'); // Base URL API
   List<GalleryEntry> _entries = [];
   int _currentPage = 1;
   int _totalPages = 1;
   bool _isLoading = true;
+  int _currentIndex = 1;
 
   @override
   void initState() {
@@ -27,12 +35,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   Future<void> _fetchEntries({int page = 1}) async {
+    final request = context.read<CookieRequest>();
     setState(() {
       _isLoading = true;
     });
 
     try {
-      final data = await _service.fetchGalleryEntries(page: page);
+      final data = await _service.fetchGalleryEntries(request, page: page);
       setState(() {
         _entries = data['entries'];
         _currentPage = data['currentPage'];
@@ -49,6 +58,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
+    // Check if the user is an admin
+    final isAdmin = request.cookies['is_admin']!.value == 'true';
+    print(request.cookies['is_admin']!.value);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -57,7 +71,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         title: const Text(
           'Galeri Batik',
           style: TextStyle(
-            fontFamily: 'Fabled', // Menggunakan font custom
+            fontFamily: 'Fabled', // Custom font
             color: Colors.black,
             fontSize: 40,
             fontWeight: FontWeight.w400,
@@ -71,42 +85,43 @@ class _GalleryScreenState extends State<GalleryScreen> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  // Tombol tambah
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddEntryScreen(
-                              onEntryAdded: _fetchEntries, // Refresh galeri
+                  // Show "Tambah Batik" button only for admin users
+                  if (isAdmin)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddEntryScreen(
+                                onEntryAdded: _fetchEntries, // Refresh gallery
+                              ),
                             ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          side: const BorderSide(color: Color(0xFFD88E30), width: 2),
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFFD88E30), width: 2),
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ),
-                      child: const Text(
-                        'Tambah Batik',
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Color(0xFFD88E30),
+                        child: const Text(
+                          'Tambah Batik',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Color(0xFFD88E30),
+                          ),
                         ),
                       ),
                     ),
-                  ),
                   const SizedBox(height: 16),
 
-                  // ListView untuk Galeri Batik
+                  // ListView for Gallery Entries
                   Expanded(
                     child: ListView.builder(
                       itemCount: _entries.length,
@@ -118,21 +133,27 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           deskripsi: entry.deskripsi,
                           asalUsul: entry.asalUsul,
                           makna: entry.makna,
-                          fotoUrl: 'https://faiz-assabil-batikalongantest.pbp.cs.ui.ac.id/media/${entry.fotoUrl}',
-                          isAdmin: true,
+                          fotoUrl: 'http://127.0.0.1:8000/media/${entry.fotoUrl}',
+                          isAdmin: isAdmin,
                           onEdit: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditEntryScreen(
                                   entry: entry,
-                                  onEntryUpdated: _fetchEntries, // Refresh galeri
+                                  onEntryUpdated: _fetchEntries, // Refresh gallery
                                 ),
                               ),
                             );
                           },
                           onDelete: () {
-                            // Logika delete
+                            showDialog(
+                              context: context,
+                              builder: (context) => DeleteEntryScreen(
+                                entryId: entry.id.toString(),
+                                onDeleteSuccess: _fetchEntries, // Refresh gallery after deletion
+                              ),
+                            );
                           },
                         );
                       },
@@ -149,6 +170,17 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   ),
                 ],
               ),
+      ),
+      bottomNavigationBar: BottomNavbar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const TimeLineScreen()),
+            );
+          }
+        },
       ),
     );
   }

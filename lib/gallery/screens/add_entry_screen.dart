@@ -1,6 +1,9 @@
 import 'dart:html' as html; // Hanya untuk platform web.
 import 'package:flutter/material.dart';
 import '../services/gallery_service.dart';
+import 'package:provider/provider.dart';
+import 'package:batikalongan_mobile/gallery/services/gallery_service.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
 
 class AddEntryScreen extends StatefulWidget {
   final VoidCallback onEntryAdded; // Callback untuk memberitahu perubahan.
@@ -12,7 +15,7 @@ class AddEntryScreen extends StatefulWidget {
 
 class _AddEntryScreenState extends State<AddEntryScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _service = GalleryService('https://faiz-assabil-batikalongantest.pbp.cs.ui.ac.id');
+  final _service = GalleryService('http://127.0.0.1:8000/');
   final TextEditingController _namaBatikController = TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
   final TextEditingController _asalUsulController = TextEditingController();
@@ -35,6 +38,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
   }
 
   Future<void> _submitForm() async {
+    final request = context.read<CookieRequest>();
     if (_formKey.currentState!.validate()) {
       if (_selectedImage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -44,7 +48,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
       }
 
       try {
-        final success = await _service.createGalleryEntry({
+        final success = await _service.createGalleryEntry(request,{
           'nama_batik': _namaBatikController.text,
           'deskripsi': _deskripsiController.text,
           'asal_usul': _asalUsulController.text,

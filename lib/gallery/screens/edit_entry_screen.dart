@@ -2,7 +2,9 @@ import 'dart:html' as html; // Untuk platform web.
 import 'package:flutter/material.dart';
 import '../models/gallery_entry.dart';
 import '../services/gallery_service.dart';
-
+import 'package:provider/provider.dart';
+import 'package:batikalongan_mobile/gallery/services/gallery_service.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
 class EditEntryScreen extends StatefulWidget {
   final GalleryEntry entry;
   final VoidCallback onEntryUpdated; // Callback untuk memberitahu perubahan.
@@ -18,7 +20,7 @@ class EditEntryScreen extends StatefulWidget {
 
 class _EditEntryScreenState extends State<EditEntryScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _service = GalleryService('https://faiz-assabil-batikalongantest.pbp.cs.ui.ac.id');
+  final _service = GalleryService('http://127.0.0.1:8000/');
   late TextEditingController _namaBatikController;
   late TextEditingController _deskripsiController;
   late TextEditingController _asalUsulController;
@@ -49,9 +51,10 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
   }
 
   Future<void> _submitForm() async {
+    final request = context.read<CookieRequest>();
     if (_formKey.currentState!.validate()) {
       try {
-        final success = await _service.editGalleryEntry(
+        final success = await _service.editGalleryEntry(request,
           widget.entry.id,
           {
             'nama_batik': _namaBatikController.text,
