@@ -27,7 +27,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   int _currentPage = 1;
   int _totalPages = 1;
   bool _isLoading = true;
-  int _currentIndex = 1;
+  int _currentIndex = 2;
 
   @override
   void initState() {

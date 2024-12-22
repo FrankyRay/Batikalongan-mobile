@@ -30,20 +30,20 @@ class BottomNavbar extends StatelessWidget {
         children: [
           _buildNavItem(
             context,
-            icon: Icons.home,
-            label: 'Home',
+            icon: Icons.checkroom,
+            label: 'Catalog',
             index: 0,
-          ),
-          _buildNavItem(
-            context,
-            icon: Icons.photo_album,
-            label: 'Gallery',
-            index: 1,
           ),
           _buildNavItem(
             context,
             icon: Icons.event,
             label: 'Events',
+            index: 1,
+          ),
+          _buildNavItem(
+            context,
+            icon: Icons.photo_album,
+            label: 'Gallery',
             index: 2,
           ),
           _buildNavItem(
