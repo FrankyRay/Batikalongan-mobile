@@ -101,8 +101,8 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
             child: Text(
               'Judul Artikel',
               style: TextStyle(
-                color: Color(0xFFD88E30), // Title color
-                fontFamily: 'Poppins', // Apply Poppins font
+                color: Color(0xFFD88E30), 
+                fontFamily: 'Poppins', 
               ),
             ),
           ),
@@ -111,11 +111,11 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Color(0xFFD88E30)), // Always visible border color
+                    color: Color(0xFFD88E30)), 
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Color(0xFFD88E30)), // Always visible border color
+                    color: Color(0xFFD88E30)), 
               ),
             ),
             validator: (value) {
@@ -124,7 +124,7 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
               }
               return null;
             },
-            style: TextStyle(fontFamily: 'Poppins'), // Apply Poppins font
+            style: TextStyle(fontFamily: 'Poppins'), 
           ),
           const SizedBox(height: 16),
           // Foto Title
@@ -133,8 +133,8 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
             child: Text(
               'Foto',
               style: TextStyle(
-                color: Color(0xFFD88E30), // Title color
-                fontFamily: 'Poppins', // Apply Poppins font
+                color: Color(0xFFD88E30), 
+                fontFamily: 'Poppins', 
               ),
             ),
           ),
@@ -144,24 +144,24 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
               ElevatedButton.icon(
                 onPressed: _pickImage,
                 icon: Icon(
-                  Icons.upload, // Changed icon
-                  color: Color(0xFFD88E30), // Icon color
+                  Icons.upload, 
+                  color: Color(0xFFD88E30), 
                 ),
                 label: Text(
                   'Upload Foto',
                   style: TextStyle(
-                    color: Color(0xFFD88E30), // Text color
-                    fontFamily: 'Poppins', // Apply Poppins font
+                    color: Color(0xFFD88E30), 
+                    fontFamily: 'Poppins', 
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
                   textStyle:
-                      TextStyle(fontFamily: 'Poppins'), // Apply Poppins font
+                      TextStyle(fontFamily: 'Poppins'), 
                   side: BorderSide(
                       color: Color(0xFFD88E30),
-                      width: 1), // Border color and width
+                      width: 1), 
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Rounded corners
+                    borderRadius: BorderRadius.circular(8), 
                   ),
                 ),
               ),
@@ -171,7 +171,7 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
                   'Gambar Dipilih',
                   style: TextStyle(
                     color: Colors.green[700],
-                    fontFamily: 'Poppins', // Apply Poppins font
+                    fontFamily: 'Poppins', 
                   ),
                 ),
             ],
@@ -183,8 +183,8 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
             child: Text(
               'Pendahuluan',
               style: TextStyle(
-                color: Color(0xFFD88E30), // Title color
-                fontFamily: 'Poppins', // Apply Poppins font
+                color: Color(0xFFD88E30), 
+                fontFamily: 'Poppins', 
               ),
             ),
           ),
@@ -194,11 +194,11 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Color(0xFFD88E30)), // Always visible border color
+                    color: Color(0xFFD88E30)), 
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Color(0xFFD88E30)), // Always visible border color
+                    color: Color(0xFFD88E30)), 
               ),
             ),
             validator: (value) {
@@ -207,7 +207,7 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
               }
               return null;
             },
-            style: TextStyle(fontFamily: 'Poppins'), // Apply Poppins font
+            style: TextStyle(fontFamily: 'Poppins'), 
           ),
           const SizedBox(height: 16),
           // Konten Field
@@ -216,8 +216,8 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
             child: Text(
               'Konten',
               style: TextStyle(
-                color: Color(0xFFD88E30), // Title color
-                fontFamily: 'Poppins', // Apply Poppins font
+                color: Color(0xFFD88E30), 
+                fontFamily: 'Poppins', 
               ),
             ),
           ),
@@ -227,11 +227,11 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Color(0xFFD88E30)), // Always visible border color
+                    color: Color(0xFFD88E30)), 
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: Color(0xFFD88E30)), // Always visible border color
+                    color: Color(0xFFD88E30)), 
               ),
             ),
             validator: (value) {
@@ -240,7 +240,7 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
               }
               return null;
             },
-            style: TextStyle(fontFamily: 'Poppins'), // Apply Poppins font
+            style: TextStyle(fontFamily: 'Poppins'), 
           ),
           const SizedBox(height: 32),
           // Submit Button
@@ -255,7 +255,7 @@ class _ArtikelFormWidgetState extends State<ArtikelFormWidget> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 textStyle:
-                    TextStyle(fontFamily: 'Poppins'), // Apply Poppins font
+                    TextStyle(fontFamily: 'Poppins'), 
               ),
               child: const Text('Submit'),
             ),
