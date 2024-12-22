@@ -11,12 +11,11 @@ class EditProductPage extends StatefulWidget {
   @override
   State<EditProductPage> createState() => _EditProductPageState();
 }
-
+// Fetch data per produk dulu
 class _EditProductPageState extends State<EditProductPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
 
   html.File? _selectedImage;
 

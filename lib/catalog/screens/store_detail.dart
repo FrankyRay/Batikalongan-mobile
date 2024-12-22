@@ -1,4 +1,5 @@
 import 'package:batikalongan_mobile/catalog/models/catalog_model.dart';
+import 'package:batikalongan_mobile/catalog/screens/add_product.dart';
 import 'package:batikalongan_mobile/catalog/screens/catalog_product.dart';
 import 'package:batikalongan_mobile/catalog/screens/edit_store.dart';
 import 'package:batikalongan_mobile/catalog/widgets/product_card.dart';
@@ -138,6 +139,27 @@ class _StoreDetailState extends State<StoreDetail> {
               ],
             ),
           ),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AddProductPage()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Tambah Produk',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
           // Products Grid
           Expanded(
             child: FutureBuilder<List<Product>>(
@@ -189,7 +211,8 @@ class StoreEditScreen extends StatelessWidget {
     required this.initialName,
     required this.initialAddress,
     required this.initialProductCount,
-    required this.initialImage, required this.store,
+    required this.initialImage,
+    required this.store,
   }) : super(key: key);
 
   @override
