@@ -7,6 +7,17 @@
 
 ---
 
+## 🎥 **Video Promosi**
+
+Video dapat diakses melalui https://youtu.be/og7yRycsrlE
+
+---
+
+## 🚀 **Tautan Deployment**
+Batikalongan dapat diakses melalui https://install.appcenter.ms/orgs/batikalongan/apps/batikalongan/distribution_groups/public.
+
+---
+
 ## 🛠️ **Deskripsi Aplikasi**
 
 Dalam konteks pengembangan kota dan pelestarian **budaya lokal**, Batikalongan hadir sebagai aplikasi **informasi batik** di Kabupaten Pekalongan, menawarkan solusi bagi para pengguna untuk menemukan produk batik yang kaya akan **nilai sejarah dan seni**.
@@ -69,11 +80,6 @@ Customer adalah individu yang ingin mencari **informasi produk batik** dan **tok
 Admin adalah pihak yang bertanggung jawab untuk **mengelola konten** di aplikasi Batikalongan, memastikan semua informasi yang tersedia selalu terbaru dan relevan. Tugas dan wewenang Admin meliputi:
 - **Menambahkan, memperbarui, dan menghapus** toko batik, produk, event, artikel, serta galeri motif.
 - **Mengelola keakuratan data** di seluruh modul aplikasi untuk memberikan pengalaman terbaik kepada pengguna.
-
----
-
-## 🚀 **Tautan Deployment**
-Batikalongan dapat diakses melalui TBA.
 
 ---
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
@@ -96,3 +97,103 @@ class ArtikelDetailScreen extends StatelessWidget {
     }
   }
 }
+=======
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:convert';
+
+class ArtikelDetailScreen extends StatelessWidget {
+  final String judul;
+  final String konten;
+  final String image;
+
+  const ArtikelDetailScreen({
+    super.key,
+    required this.judul,
+    required this.konten,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: SvgPicture.asset(
+            'assets/images/back.svg', 
+            height: 40, 
+            width: 40,
+          ),
+          onPressed: () {
+            Navigator.pop(context); 
+          },
+        ),
+        backgroundColor: Colors.transparent, 
+        elevation: 0, 
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 200,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: _getImageProvider(image),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            const SizedBox(height: 28),
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                judul,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Color(0xFFD88E30),
+                  fontSize: 20,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                  height: 1.5,
+                ),
+              ),
+            ),
+            const SizedBox(height: 28),
+            Container(
+              width: double.infinity,
+              child: Text(
+                konten,
+                textAlign: TextAlign.justify,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w400,
+                  height: 1.5,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ImageProvider _getImageProvider(String image) {
+    if (image.isEmpty) {
+      return const AssetImage('images/placeholder.jpg');
+    } else {
+      try {
+        final bytes = base64Decode(image);
+        return MemoryImage(bytes);
+      } catch (e) {
+        return const AssetImage('images/placeholder.jpg');
+      }
+    }
+  }
+}
+>>>>>>> f7040ecc866004223017a11a8dc0615001dc53ca

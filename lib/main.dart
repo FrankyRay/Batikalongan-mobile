@@ -1,6 +1,8 @@
 
 import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';
+import 'package:batikalongan_mobile/catalog/screens/catalog_store.dart';
 import 'package:batikalongan_mobile/intro/screens/splash_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
           ).copyWith(secondary: Colors.deepPurple[400]),
         ),
 
-        home: SplashScreen()
+        home: CatalogStores() // SplashScreen()
 
       ),
     );
