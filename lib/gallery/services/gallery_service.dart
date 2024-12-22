@@ -8,10 +8,6 @@ class GalleryService {
 
   GalleryService(this.baseUrl);
 
-  Future<bool> createGalleryEntry(Map<String, String> data, File image) async {
-    final request =
-        http.MultipartRequest('POST', Uri.parse('$baseUrl/gallery/add/ajax/'));
-
   /// Fetch gallery entries with pagination
   Future<Map<String, dynamic>> fetchGalleryEntries(CookieRequest request, {int page = 1}) async {
     final url = '$baseUrl/gallery/json/?page=$page'; // Use String instead of Uri
@@ -53,7 +49,6 @@ class GalleryService {
     formData.appendBlob('foto', image);
 
     try {
-
       final xhr = HttpRequest();
       xhr.open('POST', url);
       // xhr.setRequestHeader('X-CSRFToken', request.cookies['csrftoken'] ?? ''); // Pass CSRF token
@@ -67,7 +62,6 @@ class GalleryService {
       if (xhr.status == 201) {
         return true;
       } else {
-
         print('Error adding entry: ${xhr.responseText}');
         return false;
       }
@@ -76,7 +70,6 @@ class GalleryService {
       return false;
     }
   }
-
 
   /// Edit an existing gallery entry
   Future<bool> editGalleryEntry(CookieRequest request, String id, Map<String, String> data, File? imageFile) async {
