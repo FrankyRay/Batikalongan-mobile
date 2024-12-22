@@ -1,7 +1,8 @@
+import 'package:batikalongan_mobile/catalog/screens/catalog_store.dart';
 import 'package:flutter/material.dart';
 import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';
 import 'package:batikalongan_mobile/gallery/screens/gallery_screen.dart';
-import 'package:batikalongan_mobile/catalog/screens/catalog_product.dart';
+
 import '../widgets/bottom_navbar.dart';
 
 class MainNavigation extends StatefulWidget {
@@ -15,7 +16,7 @@ class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const GalleryScreen(),
+    const CatalogStores(),
     const GalleryScreen(),
     const GalleryScreen(),
     const ArtikelScreen(),

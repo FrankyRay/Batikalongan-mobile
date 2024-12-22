@@ -7,9 +7,10 @@ class GalleryService {
   final String baseUrl;
 
   GalleryService(this.baseUrl);
-  
+
   Future<bool> createGalleryEntry(Map<String, String> data, File image) async {
-    final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/gallery/add/ajax/'));
+    final request =
+        http.MultipartRequest('POST', Uri.parse('$baseUrl/gallery/add/ajax/'));
 
     // Tambahkan field data
     data.forEach((key, value) {
@@ -30,12 +31,14 @@ class GalleryService {
 
     try {
       final response = await request.send();
-      final responseBody = await response.stream.bytesToString(); // Baca isi respons.
+      final responseBody =
+          await response.stream.bytesToString(); // Baca isi respons.
 
       if (response.statusCode == 201) {
         return true;
       } else {
-        print('Error Response (${response.statusCode}): $responseBody'); // Cetak error dari respons.
+        print(
+            'Error Response (${response.statusCode}): $responseBody'); // Cetak error dari respons.
         return false;
       }
     } catch (e) {
@@ -44,7 +47,8 @@ class GalleryService {
     }
   }
 
-  Future<bool> editGalleryEntry(String id, Map<String, String> data, File? imageFile) async {
+  Future<bool> editGalleryEntry(
+      String id, Map<String, String> data, File? imageFile) async {
     final request = HttpRequest();
     final formData = FormData();
 
@@ -68,7 +72,8 @@ class GalleryService {
 
   Future<Map<String, dynamic>> fetchGalleryEntries({int page = 1}) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/gallery/json/?page=$page'));
+      final response =
+          await http.get(Uri.parse('$baseUrl/gallery/json/?page=$page'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -76,7 +81,8 @@ class GalleryService {
         if (data['entries'] is String) {
           final escapedEntries = data['entries'] as String;
           final entriesData = json.decode(escapedEntries) as List;
-          final entries = entriesData.map((entry) => GalleryEntry.fromJson(entry)).toList();
+          final entries =
+              entriesData.map((entry) => GalleryEntry.fromJson(entry)).toList();
 
           return {
             'entries': entries,
@@ -89,7 +95,8 @@ class GalleryService {
           throw Exception('Invalid "entries" format in response.');
         }
       } else {
-        throw Exception('Failed to load gallery entries with status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load gallery entries with status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching gallery entries: $e');
