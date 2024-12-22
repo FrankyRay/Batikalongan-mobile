@@ -1,3 +1,4 @@
+import 'package:batikalongan_mobile/catalog/screens/catalog_store.dart';
 import 'package:batikalongan_mobile/gallery/screens/gallery_screen.dart';
 import 'package:batikalongan_mobile/timeline/screens/timeline_screen.dart';
 import 'package:batikalongan_mobile/widgets/bottom_navbar.dart';
@@ -7,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'artikel_form_screen.dart';
 import '../widgets/artikel_card.dart';
 import 'package:batikalongan_mobile/article/models/artikel_entry.dart';
+import 'package:batikalongan_mobile/config/config.dart';
+import 'package:batikalongan_mobile/catalog/screens/catalog_product.dart';
 
 class ArtikelScreen extends StatefulWidget {
   const ArtikelScreen({Key? key}) : super(key: key);
@@ -44,7 +47,7 @@ class _ArtikelScreenState extends State<ArtikelScreen>
   }
 
   Future<List<Article>> fetchArtikel(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/article/json/');
+    final response = await request.get(Config.baseUrl + '/article/json/');
 
     var data = response;
 
@@ -87,7 +90,6 @@ class _ArtikelScreenState extends State<ArtikelScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Judul Artikel
               Expanded(
                 child: Text(
                   'Artikel Batik',
@@ -130,7 +132,8 @@ class _ArtikelScreenState extends State<ArtikelScreen>
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.add,
+                        const Icon(
+                          Icons.add,
                             size: 24, color: Color(0xFFD88E30)),
                         const SizedBox(width: 8),
                         const Text(
@@ -194,10 +197,25 @@ class _ArtikelScreenState extends State<ArtikelScreen>
       bottomNavigationBar: BottomNavbar(
         currentIndex: _currentIndex,
         onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ProductCatalog()),
+            );
+          }
           if (index == 1) {
+            // Tetap di halaman ini
+          }
+          if (index == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const GalleryScreen()),
+            );
+          }
+          if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ArtikelScreen()),
             );
           }
           if (index == 4) {

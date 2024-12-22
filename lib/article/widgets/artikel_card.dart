@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:batikalongan_mobile/config/config.dart';
 
 class ArtikelCardWidget extends StatelessWidget {
   final int id;
@@ -25,7 +26,7 @@ class ArtikelCardWidget extends StatelessWidget {
   }) : super(key: key);
 
   Future<void> _deleteArtikel(BuildContext context) async {
-    final String url = 'http://127.0.0.1:8000/article/delete-flutter/$id';
+    final String url = Config.baseUrl + '/article/delete-flutter/$id';
 
     try {
       final response = await http.delete(Uri.parse(url));

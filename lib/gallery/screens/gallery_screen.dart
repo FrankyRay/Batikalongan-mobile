@@ -12,6 +12,7 @@ import 'package:batikalongan_mobile/timeline/screens/timeline_screen.dart';
 import 'package:batikalongan_mobile/widgets/bottom_navbar.dart';
 import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';
 import 'package:batikalongan_mobile/catalog/screens/catalog_store.dart';
+import 'package:batikalongan_mobile/config/config.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -21,12 +22,12 @@ class GalleryScreen extends StatefulWidget {
 }
 
 class _GalleryScreenState extends State<GalleryScreen> {
-  final GalleryService _service = GalleryService('http://127.0.0.1:8000/'); // Base URL API
+  final GalleryService _service = GalleryService(Config.baseUrl); // Base URL API
   List<GalleryEntry> _entries = [];
   int _currentPage = 1;
   int _totalPages = 1;
   bool _isLoading = true;
-  int _currentIndex = 1;
+  int _currentIndex = 2;
 
   @override
   void initState() {
@@ -133,7 +134,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           deskripsi: entry.deskripsi,
                           asalUsul: entry.asalUsul,
                           makna: entry.makna,
-                          fotoUrl: 'http://127.0.0.1:8000/media/${entry.fotoUrl}',
+                          fotoUrl: Config.baseUrl + '/media/${entry.fotoUrl}',
                           isAdmin: isAdmin,
                           onEdit: () {
                             Navigator.push(
