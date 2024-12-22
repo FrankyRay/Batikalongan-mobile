@@ -23,7 +23,7 @@ class StoreCard extends StatelessWidget {
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
             child: Image.network(
-              '${baseUrl}${store.image}', // Menyusun URL lengkap
+              '${baseUrl}/media/${store.image}', 
               height: 100,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -47,7 +47,7 @@ class StoreCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    store.name,
+                    store.image,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,

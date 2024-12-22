@@ -71,7 +71,7 @@ class _ProductCatalogState extends State<ProductCatalog> {
             icon: const Icon(Icons.logout, color: Colors.orange),
             onPressed: () async {
               final response = await request
-                  .logout("http://127.0.0.1:8000/auth/api/logout/");
+                  .logout(Config.baseUrl + "/auth/api/logout/");
               String message = response["message"];
               if (context.mounted) {
                 if (response['status']) {

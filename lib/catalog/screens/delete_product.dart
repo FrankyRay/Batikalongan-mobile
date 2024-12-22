@@ -1,7 +1,8 @@
+import 'package:batikalongan_mobile/config/config.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> deleteProductFlutter(String productId) async {
-  const backendUrl = 'http://127.0.0.1:8000/catalog/delete-product/';
+  const backendUrl = Config.baseUrl + '/catalog/delete-product-flutter/';
   final response = await http.post(Uri.parse('$backendUrl$productId/'));
 
   if (response.statusCode == 200) {
