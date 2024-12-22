@@ -1,8 +1,11 @@
+import 'package:batikalongan_mobile/auth/screens/login.dart';
 import 'package:batikalongan_mobile/catalog/models/catalog_model.dart';
 import 'package:batikalongan_mobile/catalog/screens/catalog_store.dart';
 import 'package:batikalongan_mobile/catalog/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class ProductCatalog extends StatefulWidget {
   const ProductCatalog({Key? key}) : super(key: key);
@@ -37,6 +40,7 @@ class _ProductCatalogState extends State<ProductCatalog> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -55,8 +59,30 @@ class _ProductCatalogState extends State<ProductCatalog> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.person_outline, color: Colors.orange),
-            onPressed: () {},
+            icon: const Icon(Icons.logout, color: Colors.orange),
+            onPressed: () async {
+              final response = await request
+                  .logout("http://127.0.0.1:8000/auth/api/logout/");
+              String message = response["message"];
+              if (context.mounted) {
+                if (response['status']) {
+                  String uname = response["username"];
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("$message Sampai jumpa, $uname."),
+                  ));
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                    ),
+                  );
+                }
+              }
+            },
           ),
         ],
       ),
