@@ -8,6 +8,8 @@ import 'package:batikalongan_mobile/gallery/screens/gallery_screen.dart';
 import 'package:batikalongan_mobile/timeline/screens/timeline_screen.dart';
 import 'package:batikalongan_mobile/widgets/bottom_navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 // import '../widgets/gallery_card.dart';
 // import '../widgets/pagination_controls.dart';
 // import '../services/gallery_service.dart';
@@ -59,6 +61,13 @@ class _EventScreenState extends State<EventScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
+    bool isAdmin = false;
+    if (request.cookies['is_admin'] != null) {
+      isAdmin = bool.parse(request.cookies['is_admin']!.value);
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       // appBar: AppBar(
@@ -100,21 +109,15 @@ class _EventScreenState extends State<EventScreen> {
                 ),
               ),
 
-              // if (isAdmin == 'true')
+              if (isAdmin)
                 GestureDetector(
                   onTap: () async {
-                    final newArtikel = await Navigator.push(
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const CreateEventForm(),
                       ),
                     );
-                    // if (newArtikel != null) {
-                    //   setState(() {
-                    //     artikelList =
-                    //         fetchArtikel(context.read<CookieRequest>());
-                    //   });
-                    // }
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -170,7 +173,7 @@ class _EventScreenState extends State<EventScreen> {
                           tanggal: entry.tanggal,
                           lokasi: entry.lokasi,
                           fotoUrl: '${_url}media/${entry.fotoUrl}',
-                          isAdmin: true,
+                          isAdmin: isAdmin,
                           onEdit: () {
                             Navigator.push(
                               context,

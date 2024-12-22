@@ -51,6 +51,7 @@ class _AddStorePageState extends State<AddStorePage> {
 
         // Membuat form data untuk pengunggahan
 
+
         final request = http.MultipartRequest('POST', Uri.parse(backendUrl))
           ..fields['name'] = _nameController.text
           ..fields['address'] = _locationController.text
@@ -80,6 +81,7 @@ class _AddStorePageState extends State<AddStorePage> {
             ),
           );
         }
+
 
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
