@@ -1,109 +1,87 @@
-// import 'package:flutter/material.dart';
-// import 'package:pbp_django_auth/pbp_django_auth.dart';
-// import 'package:batikalongan_mobile/catalog/screens/productentry_form.dart';
-// import 'package:provider/provider.dart';
+import 'package:batikalongan_mobile/catalog/models/catalog_model.dart';
+import 'package:flutter/material.dart';
 
-// class ItemHomepage {
-//   final String name;
-//   final IconData icon;
-//   final Color color;
-//   final int number;
+class ProductCard extends StatelessWidget {
+  final Product product;
 
-//   ItemHomepage(this.name, this.icon, this.color, this.number);
-// }
+  const ProductCard({Key? key, required this.product}) : super(key: key);
 
-// class ItemCard extends StatelessWidget {
-//   // Menampilkan kartu dengan ikon dan nama.
-
-//   final ItemHomepage item;
-
-//   const ItemCard(this.item, {super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final request = context.watch<CookieRequest>();
-//     return Material(
-//       // Menentukan warna latar belakang dari tema aplikasi.
-//       color: item.color,
-//       // Membuat sudut kartu melengkung.
-//       borderRadius: BorderRadius.circular(12),
-
-//       child: InkWell(
-//         // Aksi ketika kartu ditekan.
-//         onTap: () async {
-//           // Menampilkan pesan SnackBar saat kartu ditekan.
-//           ScaffoldMessenger.of(context)
-//             ..hideCurrentSnackBar()
-//             ..showSnackBar(SnackBar(
-//                 content: Text("Kamu telah menekan tombol ${item.name}!")));
-//           // Navigate ke route yang sesuai (tergantung jenis tombol)
-//           if (item.name == "Tambah Produk") {
-//             Navigator.push(
-//               context,
-//               MaterialPageRoute(
-//                   builder: (context) => const ProductEntryFormPage()),
-//             );
-//           } else if (item.name == "Lihat Daftar Produk") {
-//             Navigator.push(
-//               context,
-//               MaterialPageRoute(builder: (context) => const ProductPage()),
-//             );
-//           }
-//           // statement if sebelumnya
-// // tambahkan else if baru seperti di bawah ini
-//           else if (item.name == "Logout") {
-//             final response = await request.logout(
-//                 "http://127.0.0.1:8000/auth/logout/");
-//             String message = response["message"];
-//             if (context.mounted) {
-//               if (response['status']) {
-//                 String uname = response["username"];
-//                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//                   content: Text("$message Sampai jumpa, $uname."),
-//                 ));
-//                 Navigator.pushReplacement(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => const LoginPage()),
-//                 );
-//               } else {
-//                 ScaffoldMessenger.of(context).showSnackBar(
-//                   SnackBar(
-//                     content: Text(message),
-//                   ),
-//                 );
-//               }
-//             }
-//           }
-//         },
-//         // Container untuk menyimpan Icon dan Text
-//         child: Container(
-//           padding: const EdgeInsets.all(8),
-//           child: Center(
-//             child: Column(
-//               // Menyusun ikon dan teks di tengah kartu.
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text(
-//                   item.number.toString(),
-//                   textAlign: TextAlign.center,
-//                   style: const TextStyle(color: Colors.white),
-//                 ),
-//                 Icon(
-//                   item.icon,
-//                   color: Colors.white,
-//                   size: 30.0,
-//                 ),
-//                 const Padding(padding: EdgeInsets.all(3)),
-//                 Text(
-//                   item.name,
-//                   textAlign: TextAlign.center,
-//                   style: const TextStyle(color: Colors.white),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+            child: Image.network(
+              product.image,
+              height: 150,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 150,
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.image_not_supported),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Rp${product.price.toStringAsFixed(0)}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on_outlined,
+                      size: 14,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        product.store.name,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
