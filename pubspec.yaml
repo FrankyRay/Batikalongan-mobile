@@ -85,6 +85,7 @@ flutter:
     - assets/images/edit.svg
     - assets/images/delete.svg
     - assets/images/back.svg
+    - assets/images/authbg.png
   fonts:
     - family: Fabled
       fonts:
