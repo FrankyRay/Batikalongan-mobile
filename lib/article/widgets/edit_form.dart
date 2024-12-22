@@ -4,7 +4,7 @@ import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:batikalongan_mobile/config/config.dart';
 class EditForm extends StatefulWidget {
   final int id;
   final String initialJudul;
@@ -67,7 +67,7 @@ class _EditFormState extends State<EditForm> {
         };
 
         final response = await http.put(
-          Uri.parse("http://127.0.0.1:8000/article/update-flutter/"),
+          Uri.parse(Config.baseUrl + "/article/update-flutter/"),
           headers: {"Content-Type": "application/json"},
           body: jsonEncode(submittedData),
         );

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'artikel_form_screen.dart';
 import '../widgets/artikel_card.dart';
 import 'package:batikalongan_mobile/article/models/artikel_entry.dart';
+import 'package:batikalongan_mobile/config/config.dart';
 
 class ArtikelScreen extends StatefulWidget {
   const ArtikelScreen({Key? key}) : super(key: key);
@@ -44,7 +45,7 @@ class _ArtikelScreenState extends State<ArtikelScreen>
   }
 
   Future<List<Article>> fetchArtikel(CookieRequest request) async {
-    final response = await request.get('http://127.0.0.1:8000/article/json/');
+    final response = await request.get(Config.baseUrl + '/article/json/');
 
     var data = response;
 
@@ -130,7 +131,8 @@ class _ArtikelScreenState extends State<ArtikelScreen>
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.add,
+                        const Icon(
+                          Icons.add,
                             size: 24, color: Color(0xFFD88E30)),
                         const SizedBox(width: 8),
                         const Text(
