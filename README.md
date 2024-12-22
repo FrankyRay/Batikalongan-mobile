@@ -7,6 +7,12 @@
 
 ---
 
+## 🎥 **Video Promosi**
+
+Video dapat diakses di link berikut ini: https://youtu.be/og7yRycsrlE
+
+---
+
 ## 🛠️ **Deskripsi Aplikasi**
 
 Dalam konteks pengembangan kota dan pelestarian **budaya lokal**, Batikalongan hadir sebagai aplikasi **informasi batik** di Kabupaten Pekalongan, menawarkan solusi bagi para pengguna untuk menemukan produk batik yang kaya akan **nilai sejarah dan seni**.
