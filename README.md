@@ -9,7 +9,12 @@
 
 ## 🎥 **Video Promosi**
 
-Video dapat diakses di link berikut ini: https://youtu.be/og7yRycsrlE
+Video dapat diakses melalui https://youtu.be/og7yRycsrlE
+
+---
+
+## 🚀 **Tautan Deployment**
+Batikalongan dapat diakses melalui https://install.appcenter.ms/orgs/batikalongan/apps/batikalongan/distribution_groups/public.
 
 ---
 
@@ -75,11 +80,6 @@ Customer adalah individu yang ingin mencari **informasi produk batik** dan **tok
 Admin adalah pihak yang bertanggung jawab untuk **mengelola konten** di aplikasi Batikalongan, memastikan semua informasi yang tersedia selalu terbaru dan relevan. Tugas dan wewenang Admin meliputi:
 - **Menambahkan, memperbarui, dan menghapus** toko batik, produk, event, artikel, serta galeri motif.
 - **Mengelola keakuratan data** di seluruh modul aplikasi untuk memberikan pengalaman terbaik kepada pengguna.
-
----
-
-## 🚀 **Tautan Deployment**
-Batikalongan dapat diakses melalui TBA.
 
 ---
 
