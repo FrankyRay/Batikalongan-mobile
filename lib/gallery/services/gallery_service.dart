@@ -96,26 +96,20 @@ class GalleryService {
   }
 
   /// Delete a gallery entry
-  Future<bool> deleteGalleryEntry(CookieRequest request, String id) async {
-    final url = Uri.parse('$baseUrl/gallery/delete/$id/flutter/');
+Future<bool> deleteGalleryEntry(CookieRequest request, String id) async {
+  final url = Uri.parse('$baseUrl/gallery/delete/$id/flutter/');
 
-    try {
-      final response = await request.post(url.toString(), {});
-      if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-        if (jsonResponse['message'] == 'Deleted successfully') {
-          return true;
-        } else {
-          print('Error deleting entry: ${jsonResponse['message']}');
-          return false;
-        }
-      } else {
-        print('Failed to delete entry with status code: ${response.statusCode}');
-        return false;
-      }
-    } catch (e) {
-      print('Error in deleteGalleryEntry: $e');
+  try {
+    final response = await request.post(url.toString(), {});
+    if (response != null && response['message'] == 'Deleted successfully') {
+      return true;
+    } else {
+      print('Error deleting entry: ${response?['error'] ?? 'Unknown error'}');
       return false;
     }
+  } catch (e) {
+    print('Error in deleteGalleryEntry: $e');
+    return false;
   }
+}
 }

@@ -134,7 +134,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           deskripsi: entry.deskripsi,
                           asalUsul: entry.asalUsul,
                           makna: entry.makna,
-                          fotoUrl: 'http://127.0.0.1:8000/media/${entry.fotoUrl}',
+                          fotoUrl: Config.baseUrl + '/media/${entry.fotoUrl}',
                           isAdmin: isAdmin,
                           onEdit: () {
                             Navigator.push(
