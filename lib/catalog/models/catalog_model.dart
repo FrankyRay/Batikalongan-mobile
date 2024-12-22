@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+// catalog_model.dart
 /// Store Model
 class Store {
   String id;
