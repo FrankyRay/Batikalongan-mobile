@@ -1,6 +1,5 @@
-import 'package:batikalongan_mobile/auth/screens/menu.dart';
+import 'package:batikalongan_mobile/auth/screens/register.dart';
 import 'package:flutter/material.dart';
-import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';  
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -107,7 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => AuthMenu(),
+                                          builder: (context) => RegisterPage(),
                                         ),
                                       );
                                     } else {
