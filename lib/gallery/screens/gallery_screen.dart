@@ -8,10 +8,10 @@ import '../models/gallery_entry.dart';
 import 'edit_entry_screen.dart';
 import 'add_entry_screen.dart';
 import 'delete_entry_screen.dart';
-import 'package:batikalongan_mobile/auth/screens/register.dart';
-import 'package:batikalongan_mobile/screens/main_navigation.dart';
 import 'package:batikalongan_mobile/timeline/screens/timeline_screen.dart';
 import 'package:batikalongan_mobile/widgets/bottom_navbar.dart';
+import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';
+import 'package:batikalongan_mobile/catalog/screens/catalog_store.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -174,7 +174,28 @@ class _GalleryScreenState extends State<GalleryScreen> {
       bottomNavigationBar: BottomNavbar(
         currentIndex: _currentIndex,
         onTap: (index) {
+          if (index == 0) {
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => const CatalogScreen()),
+            // );
+          }
+          if (index == 1) {
+            // Tetap di halaman ini
+          }
+          if (index == 2) {
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => const EventScreen()),
+            // );
+          }
           if (index == 3) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ArtikelScreen()),
+            );
+          }
+          if (index == 4) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const TimeLineScreen()),
