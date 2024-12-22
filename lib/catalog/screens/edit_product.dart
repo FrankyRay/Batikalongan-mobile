@@ -42,7 +42,6 @@ class _EditProductPageState extends State<EditProductPage> {
 
         request.fields['name'] = _nameController.text;
         request.fields['price'] = _priceController.text;
-        request.fields['description'] = _descriptionController.text;
 
         if (_selectedImage != null) {
           final reader = html.FileReader();
@@ -104,11 +103,6 @@ class _EditProductPageState extends State<EditProductPage> {
                 validator: (value) => value == null || value.isEmpty
                     ? 'Harga produk wajib diisi'
                     : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(labelText: 'Deskripsi Produk'),
               ),
               const SizedBox(height: 16),
               TextButton.icon(
