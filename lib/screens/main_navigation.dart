@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';
 import 'package:batikalongan_mobile/gallery/screens/gallery_screen.dart';
-import 'package:batikalongan_mobile/catalog/screens/menu.dart';
+import 'package:batikalongan_mobile/catalog/screens/catalog_product.dart';
 import '../widgets/bottom_navbar.dart';
 
 class MainNavigation extends StatefulWidget {
