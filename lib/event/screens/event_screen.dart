@@ -1,4 +1,5 @@
 import 'package:batikalongan_mobile/article/screens/artikel_screen.dart';
+import 'package:batikalongan_mobile/catalog/screens/product.dart';
 import 'package:batikalongan_mobile/event/models/event_entry.dart';
 import 'package:batikalongan_mobile/event/screens/create_event.dart';
 import 'package:batikalongan_mobile/event/screens/edit_event.dart';
@@ -196,19 +197,16 @@ class _EventScreenState extends State<EventScreen> {
         currentIndex: _currentIndex,
         onTap: (index) {
           if (index == 0) {
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const CatalogScreen()),
-            // );
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => CatalogScreen()),
+            );
           }
-          if (index == 1) {
+          if (index == 2) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const GalleryScreen()),
             );
-          }
-          if (index == 2) {
-            // Tetap di halaman ini
           }
           if (index == 3) {
             Navigator.pushReplacement(
