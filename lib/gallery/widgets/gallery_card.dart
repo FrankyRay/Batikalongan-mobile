@@ -49,22 +49,25 @@ class GalleryCard extends StatelessWidget {
             children: [
               // Gambar
               ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  fotoUrl,
-                  width: 120,
-                  height: 120,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 120,
-                      height: 120,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.broken_image, color: Colors.grey),
-                    );
-                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: SizedBox(
+                    width: 120, // Lebar tetap
+                    child: AspectRatio(
+                      aspectRatio: 9 / 16, // Atur rasio aspek sesuai kebutuhan
+                      child: Image.network(
+                        fotoUrl,
+                        fit: BoxFit.cover, // Gambar memenuhi ruang tanpa distorsi
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.broken_image, color: Colors.grey),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+
               const SizedBox(width: 12),
 
               // Detail Batik
