@@ -1,6 +1,4 @@
-import 'dart:io'; // For non-web platform
-import 'dart:html' as html; // For web platform
-import 'package:flutter/foundation.dart' show kIsWeb; // For platform detection
+import 'dart:io'; // For non-web platforms
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import '../services/gallery_service.dart';
@@ -9,8 +7,9 @@ import 'package:batikalongan_mobile/config/config.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 
 class AddEntryScreen extends StatefulWidget {
-  final VoidCallback onEntryAdded; // Callback untuk memberitahu perubahan.
-  const AddEntryScreen({super.key, required this.onEntryAdded});
+  final VoidCallback onEntryAdded;
+
+  const AddEntryScreen({Key? key, required this.onEntryAdded}) : super(key: key);
 
   @override
   _AddEntryScreenState createState() => _AddEntryScreenState();
@@ -19,46 +18,30 @@ class AddEntryScreen extends StatefulWidget {
 class _AddEntryScreenState extends State<AddEntryScreen> {
   final _formKey = GlobalKey<FormState>();
   final _service = GalleryService(Config.baseUrl);
-  final TextEditingController _namaBatikController = TextEditingController();
-  final TextEditingController _deskripsiController = TextEditingController();
-  final TextEditingController _asalUsulController = TextEditingController();
-  final TextEditingController _maknaController = TextEditingController();
+  final _namaBatikController = TextEditingController();
+  final _deskripsiController = TextEditingController();
+  final _asalUsulController = TextEditingController();
+  final _maknaController = TextEditingController();
 
-  File? _selectedImage; // Variable for non-web platforms
-  html.File? _webSelectedImage; // Variable for web platforms
+  File? _selectedImage;
 
   Future<void> _pickImage() async {
-    if (kIsWeb) {
-      // File picker for web
-      final uploadInput = html.FileUploadInputElement()..accept = 'image/*';
-      uploadInput.click();
-      uploadInput.onChange.listen((e) {
-        final file = uploadInput.files?.first;
-        if (file != null) {
-          setState(() {
-            _webSelectedImage = file;
-          });
-        }
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result != null && result.files.single.path != null) {
+      setState(() {
+        _selectedImage = File(result.files.single.path!);
       });
     } else {
-      // File picker for non-web platforms
-      final result = await FilePicker.platform.pickFiles(type: FileType.image);
-      if (result != null && result.files.single.path != null) {
-        setState(() {
-          _selectedImage = File(result.files.single.path!);
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Tidak ada file yang dipilih')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tidak ada file yang dipilih')),
+      );
     }
   }
 
   Future<void> _submitForm() async {
     final request = context.read<CookieRequest>();
     if (_formKey.currentState!.validate()) {
-      if ((_selectedImage == null && !kIsWeb) || (_webSelectedImage == null && kIsWeb)) {
+      if (_selectedImage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Pilih gambar terlebih dahulu')),
         );
@@ -74,11 +57,11 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
             'asal_usul': _asalUsulController.text,
             'makna': _maknaController.text,
           },
-          kIsWeb ? _webSelectedImage! : _selectedImage!,
+          _selectedImage!,
         );
 
         if (success) {
-          widget.onEntryAdded(); // Notify callback
+          widget.onEntryAdded();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Berhasil menambahkan entri')),
           );
@@ -123,28 +106,28 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: _pickImage,
-                    icon: Icon(Icons.upload, color: const Color(0xFFD88E30)),
-                    label: Text(
+                    icon: const Icon(Icons.upload, color: Color(0xFFD88E30)),
+                    label: const Text(
                       'Upload Foto',
                       style: TextStyle(
-                        color: const Color(0xFFD88E30),
+                        color: Color(0xFFD88E30),
                         fontFamily: 'Poppins',
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
                       textStyle: const TextStyle(fontFamily: 'Poppins'),
-                      side: BorderSide(color: const Color(0xFFD88E30), width: 1),
+                      side: const BorderSide(color: Color(0xFFD88E30), width: 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
                   const SizedBox(width: 16),
-                  if (_selectedImage != null || _webSelectedImage != null)
-                    Text(
+                  if (_selectedImage != null)
+                    const Text(
                       'Gambar Dipilih',
                       style: TextStyle(
-                        color: Colors.green[700],
+                        color: Colors.green,
                         fontFamily: 'Poppins',
                       ),
                     ),
@@ -193,8 +176,8 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
         border: OutlineInputBorder(
           borderSide: const BorderSide(color: Color(0xFFD88E30)),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0xFFD88E30)),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFD88E30)),
         ),
       ),
       validator: (value) {

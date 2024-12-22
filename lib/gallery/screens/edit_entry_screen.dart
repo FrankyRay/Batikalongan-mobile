@@ -1,5 +1,4 @@
 import 'dart:io'; // For non-web platforms
-import 'dart:html' as html; // For web platforms
 import 'package:flutter/foundation.dart' show kIsWeb; // Detect platform
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -30,7 +29,7 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
   late TextEditingController _deskripsiController;
   late TextEditingController _asalUsulController;
   late TextEditingController _maknaController;
-  dynamic _selectedImage;
+  File? _selectedImage; // Platform-independent File object
 
   @override
   void initState() {
@@ -42,28 +41,16 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
   }
 
   Future<void> _pickImage() async {
-    if (kIsWeb) {
-      final uploadInput = html.FileUploadInputElement()..accept = 'image/*';
-      uploadInput.click();
-      uploadInput.onChange.listen((e) {
-        final file = uploadInput.files?.first;
-        if (file != null) {
-          setState(() {
-            _selectedImage = file;
-          });
-        }
+    // File picker for both web and non-web platforms
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result != null && result.files.single.path != null) {
+      setState(() {
+        _selectedImage = File(result.files.single.path!);
       });
     } else {
-      final result = await FilePicker.platform.pickFiles(type: FileType.image);
-      if (result != null && result.files.single.path != null) {
-        setState(() {
-          _selectedImage = File(result.files.single.path!);
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Tidak ada file yang dipilih')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tidak ada file yang dipilih')),
+      );
     }
   }
 
@@ -129,17 +116,17 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: _pickImage,
-                    icon: Icon(Icons.upload, color: const Color(0xFFD88E30)),
-                    label: Text(
+                    icon: const Icon(Icons.upload, color: Color(0xFFD88E30)),
+                    label: const Text(
                       'Upload Foto',
                       style: TextStyle(
-                        color: const Color(0xFFD88E30),
+                        color: Color(0xFFD88E30),
                         fontFamily: 'Poppins',
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
                       textStyle: const TextStyle(fontFamily: 'Poppins'),
-                      side: BorderSide(color: const Color(0xFFD88E30), width: 1),
+                      side: const BorderSide(color: Color(0xFFD88E30), width: 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -147,10 +134,10 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
                   ),
                   const SizedBox(width: 16),
                   if (_selectedImage != null)
-                    Text(
+                    const Text(
                       'Gambar Dipilih',
                       style: TextStyle(
-                        color: Colors.green[700],
+                        color: Colors.green,
                         fontFamily: 'Poppins',
                       ),
                     ),
@@ -199,8 +186,8 @@ class _EditEntryScreenState extends State<EditEntryScreen> {
         border: OutlineInputBorder(
           borderSide: const BorderSide(color: Color(0xFFD88E30)),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color(0xFFD88E30)),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFD88E30)),
         ),
       ),
       validator: (value) {
