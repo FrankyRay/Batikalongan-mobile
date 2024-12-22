@@ -18,19 +18,18 @@ class ArtikelDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Menghapus judul pada AppBar
         leading: IconButton(
           icon: SvgPicture.asset(
-            'assets/images/back.svg', // Path ke file SVG
-            height: 40, // Perbesar ukuran tombol back
+            'assets/images/back.svg', 
+            height: 40, 
             width: 40,
           ),
           onPressed: () {
-            Navigator.pop(context); // Fungsi kembali ke halaman sebelumnya
+            Navigator.pop(context); 
           },
         ),
-        backgroundColor: Colors.transparent, // Transparan jika diperlukan
-        elevation: 0, // Menghilangkan bayangan AppBar
+        backgroundColor: Colors.transparent, 
+        elevation: 0, 
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

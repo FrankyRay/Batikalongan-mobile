@@ -90,7 +90,6 @@ class _ArtikelScreenState extends State<ArtikelScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Judul Artikel
               Expanded(
                 child: Text(
                   'Artikel Batik',

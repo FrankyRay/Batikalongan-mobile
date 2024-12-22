@@ -1,5 +1,7 @@
-import 'dart:html' as html; // For file picker on web platforms
+import 'dart:convert';
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AddStorePage extends StatefulWidget {
   const AddStorePage({Key? key}) : super(key: key);
@@ -13,13 +15,13 @@ class _AddStorePageState extends State<AddStorePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
 
-  html.File? _selectedImage; // Variable to store the selected image file
-  int _productCount = 0; // Variable to store the product count
+  html.File? _selectedImage;
+  int _productCount = 0;
 
   Future<void> _pickImage() async {
     final uploadInput = html.FileUploadInputElement()..accept = 'image/*';
     uploadInput.click();
-    uploadInput.onChange.listen((e) {
+    uploadInput.onChange.listen((event) {
       final file = uploadInput.files?.first;
       if (file != null) {
         setState(() {
@@ -38,16 +40,38 @@ class _AddStorePageState extends State<AddStorePage> {
         return;
       }
 
-      // Replace this URL with your backend endpoint for creating a store
-      const backendUrl = 'http://127.0.0.1:8000/catalog/create-store-flutter/';
-
       try {
-        // Simulate a request to your backend
-        // Implement this logic using your preferred HTTP library
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Toko berhasil ditambahkan')),
-        );
-        Navigator.pop(context);
+        // URL backend
+        const backendUrl = 'http://127.0.0.1:8000/catalog/create-store-flutter/';
+
+        // Membuat form data untuk pengunggahan
+        final request = html.HttpRequest();
+        request.open('POST', backendUrl);
+        request.setRequestHeader('enctype', 'multipart/form-data');
+
+        final formData = html.FormData();
+        formData.append('name', _nameController.text);
+        formData.append('address', _locationController.text);
+        formData.append('product_count', _productCount.toString());
+        formData.appendBlob('image', _selectedImage!);
+
+        request.send(formData);
+
+        request.onLoadEnd.listen((event) {
+          if (request.status == 201) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Toko berhasil ditambahkan')),
+            );
+            Navigator.pop(context);
+          } else {
+            final response = jsonDecode(request.responseText ?? '{}');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Gagal menambahkan toko: ${response["message"] ?? "Kesalahan tidak diketahui"}'),
+              ),
+            );
+          }
+        });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Terjadi kesalahan: $e')),
@@ -80,132 +104,27 @@ class _AddStorePageState extends State<AddStorePage> {
           child: ListView(
             children: [
               // Nama Toko Field
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Nama Toko',
-                  style: TextStyle(
-                    color: const Color(0xFFD88E30),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Nama toko wajib diisi'
-                    : null,
-                style: const TextStyle(fontFamily: 'Poppins'),
-              ),
+              _buildTextField('Nama Toko', _nameController, 'Nama toko wajib diisi'),
+
               const SizedBox(height: 16),
 
               // Jumlah Produk Field
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Jumlah Produk',
-                  style: TextStyle(
-                    color: const Color(0xFFD88E30),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        if (_productCount > 0) _productCount--;
-                      });
-                    },
-                    icon: const Icon(Icons.remove),
-                    color: const Color(0xFFD88E30),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      readOnly: true,
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: const Color(0xFFD88E30)), // Border color
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: const Color(0xFFD88E30)), // Border color
-                        ),
-                      ),
-                      controller: TextEditingController(
-                        text: _productCount.toString(),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _productCount++;
-                      });
-                    },
-                    icon: const Icon(Icons.add),
-                    color: const Color(0xFFD88E30),
-                  ),
-                ],
-              ),
+              _buildProductCountField(),
+
               const SizedBox(height: 16),
 
               // Lokasi Toko Field
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Lokasi Toko',
-                  style: TextStyle(
-                    color: const Color(0xFFD88E30),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-              TextFormField(
-                controller: _locationController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Lokasi toko wajib diisi'
-                    : null,
-                style: const TextStyle(fontFamily: 'Poppins'),
-              ),
+              _buildTextField('Lokasi Toko', _locationController, 'Lokasi toko wajib diisi'),
+
               const SizedBox(height: 16),
 
               // Image Picker Button
               TextButton.icon(
                 onPressed: _pickImage,
-                icon: Icon(
-                  Icons.upload,
-                  color: const Color(0xFFD88E30),
-                ),
-                label: Text(
+                icon: Icon(Icons.upload, color: const Color(0xFFD88E30)),
+                label: const Text(
                   'Pilih Gambar Toko',
-                  style: TextStyle(
-                    color: const Color(0xFFD88E30),
-                    fontFamily: 'Poppins',
-                  ),
+                  style: TextStyle(color: Color(0xFFD88E30), fontFamily: 'Poppins'),
                 ),
               ),
               if (_selectedImage != null)
@@ -220,6 +139,7 @@ class _AddStorePageState extends State<AddStorePage> {
                     ),
                   ),
                 ),
+
               const SizedBox(height: 16),
 
               // Submit Button
@@ -242,6 +162,88 @@ class _AddStorePageState extends State<AddStorePage> {
           ),
         ),
       ),
+    );
+  }
+
+  // Helper to build text fields
+  Widget _buildTextField(String label, TextEditingController controller, String errorText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            label,
+            style: TextStyle(color: const Color(0xFFD88E30), fontFamily: 'Poppins'),
+          ),
+        ),
+        TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xFFD88E30)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: const Color(0xFFD88E30)),
+            ),
+          ),
+          validator: (value) => value == null || value.isEmpty ? errorText : null,
+          style: const TextStyle(fontFamily: 'Poppins'),
+        ),
+      ],
+    );
+  }
+
+  // Helper to build product count field
+  Widget _buildProductCountField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            'Jumlah Produk',
+            style: TextStyle(color: const Color(0xFFD88E30), fontFamily: 'Poppins'),
+          ),
+        ),
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  if (_productCount > 0) _productCount--;
+                });
+              },
+              icon: const Icon(Icons.remove),
+              color: const Color(0xFFD88E30),
+            ),
+            Expanded(
+              child: TextFormField(
+                readOnly: true,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: const Color(0xFFD88E30)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: const Color(0xFFD88E30)),
+                  ),
+                ),
+                controller: TextEditingController(text: _productCount.toString()),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _productCount++;
+                });
+              },
+              icon: const Icon(Icons.add),
+              color: const Color(0xFFD88E30),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
