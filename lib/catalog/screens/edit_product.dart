@@ -1,12 +1,15 @@
 import 'dart:convert';
+import 'dart:io'; // For file handling
+import 'package:batikalongan_mobile/config/config.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-import 'dart:html' as html;
+import 'package:batikalongan_mobile/catalog/models/catalog_model.dart';
 
 class EditProductPage extends StatefulWidget {
-  final String productId;
+  final Product product;
 
-  const EditProductPage({Key? key, required this.productId}) : super(key: key);
+  const EditProductPage({Key? key, required this.product}) : super(key: key);
 
   @override
   State<EditProductPage> createState() => _EditProductPageState();
@@ -18,63 +21,73 @@ class _EditProductPageState extends State<EditProductPage> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 
-  html.File? _selectedImage;
+  File? _selectedImage;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.product.name;
+    _priceController.text = widget.product.price.toString();
+  }
 
   Future<void> _pickImage() async {
-    final uploadInput = html.FileUploadInputElement()..accept = 'image/*';
-    uploadInput.click();
-    uploadInput.onChange.listen((e) {
-      final file = uploadInput.files?.first;
-      if (file != null) {
-        setState(() {
-          _selectedImage = file;
-        });
-      }
-    });
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tidak ada file yang dipilih')),
+      );
+    }
   }
 
   Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final backendUrl = 'http://127.0.0.1:8000/catalog/update-product-flutter/${widget.productId}/';
+  if (_formKey.currentState!.validate()) {
+    final backendUrl =
+        Config.baseUrl + '/catalog/update-product-flutter/${widget.product.id}/';
 
-      try {
-        final request = http.MultipartRequest('POST', Uri.parse(backendUrl));
+    try {
+      final request = http.MultipartRequest('POST', Uri.parse(backendUrl));
 
-        request.fields['name'] = _nameController.text;
-        request.fields['price'] = _priceController.text;
+      // Kirim data form
+      request.fields['name'] = _nameController.text;
+      request.fields['price'] = _priceController.text;
 
-        if (_selectedImage != null) {
-          final reader = html.FileReader();
-          reader.readAsArrayBuffer(_selectedImage!);
-          await reader.onLoad.first;
+      // Kirim file gambar jika ada
+      if (_selectedImage != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+          'image',
+          _selectedImage!.path,
+        ));
+      }
 
-          request.files.add(http.MultipartFile.fromBytes(
-            'image',
-            reader.result as List<int>,
-            filename: _selectedImage!.name,
-          ));
-        }
+      // Kirim request
+      final response = await request.send();
 
-        final response = await request.send();
-        if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Produk berhasil diperbarui')),
-          );
-          Navigator.pop(context);
-        } else {
-          final responseBody = await response.stream.bytesToString();
-          final error = jsonDecode(responseBody)['message'];
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Gagal memperbarui produk: $error')),
-          );
-        }
-      } catch (e) {
+      if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Terjadi kesalahan: $e')),
+          const SnackBar(content: Text('Produk berhasil diperbarui')),
+        );
+        Navigator.pop(context);
+      } else {
+        final responseBody = await response.stream.bytesToString();
+        final error = jsonDecode(responseBody)['message'];
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal memperbarui produk: $error')),
         );
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +124,13 @@ class _EditProductPageState extends State<EditProductPage> {
                 label: const Text('Pilih Gambar'),
               ),
               if (_selectedImage != null)
-                Text('Gambar Terpilih: ${_selectedImage!.name}'),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    'Gambar Terpilih: ${_selectedImage!.path.split('/').last}',
+                    style: const TextStyle(fontSize: 14, color: Colors.green),
+                  ),
+                ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _submitForm,

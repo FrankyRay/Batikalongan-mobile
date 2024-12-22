@@ -1,7 +1,9 @@
 import 'dart:convert'; // For JSON encoding
-import 'dart:html' as html; // For file picker
+import 'dart:io'; // For file handling
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http; // For HTTP requests
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:batikalongan_mobile/config/config.dart';
 
 class AddProductPage extends StatefulWidget {
   const AddProductPage({Key? key}) : super(key: key);
@@ -16,19 +18,21 @@ class _AddProductPageState extends State<AddProductPage> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _storeIdController = TextEditingController();
 
-  html.File? _selectedImage;
+  File? _selectedImage;
 
   Future<void> _pickImage() async {
-    final uploadInput = html.FileUploadInputElement()..accept = 'image/*';
-    uploadInput.click();
-    uploadInput.onChange.listen((e) {
-      final file = uploadInput.files?.first;
-      if (file != null) {
-        setState(() {
-          _selectedImage = file;
-        });
-      }
-    });
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Tidak ada file yang dipilih')),
+      );
+    }
   }
 
   Future<void> _submitForm() async {
@@ -41,39 +45,32 @@ class _AddProductPageState extends State<AddProductPage> {
       }
 
       try {
-        // Convert the image file to base64 for JSON compatibility
-        final reader = html.FileReader();
-        reader.readAsDataUrl(_selectedImage!);
-        await reader.onLoad.first;
+        final backendUrl = '${Config.baseUrl}/catalog/create-product-flutter/';
+        final request = http.MultipartRequest('POST', Uri.parse(backendUrl));
 
-        final base64Image = (reader.result as String).split(',').last;
+        // Add form fields
+        request.fields['name'] = _nameController.text;
+        request.fields['price'] = _priceController.text;
+        request.fields['store_id'] = _storeIdController.text;
 
-        // Prepare the payload
-        final payload = {
-          "name": _nameController.text,
-          "price": _priceController.text,
-          "image": base64Image,
-          "store_id": _storeIdController.text,
-        };
+        // Add image file
+        request.files.add(await http.MultipartFile.fromPath(
+          'image',
+          _selectedImage!.path,
+        ));
 
-        // Send the HTTP POST request
-        const backendUrl = 'http://127.0.0.1:8000/catalog/create-product-flutter/';
-        final response = await http.post(
-          Uri.parse(backendUrl),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(payload),
-        );
+        final response = await request.send();
 
-        // Handle the response
-        final responseData = jsonDecode(response.body);
-        if (response.statusCode == 200 && responseData['status'] == 'success') {
+        if (response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Produk berhasil ditambahkan')),
           );
           Navigator.pop(context);
         } else {
+          final responseBody = await response.stream.bytesToString();
+          final error = jsonDecode(responseBody)['message'] ?? 'Kesalahan tidak diketahui';
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${responseData['message']}')),
+            SnackBar(content: Text('Gagal menambahkan produk: $error')),
           );
         }
       } catch (e) {
@@ -90,13 +87,10 @@ class _AddProductPageState extends State<AddProductPage> {
       appBar: AppBar(
         title: const Text(
           'Tambah Produk',
-          textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.black,
-            fontSize: 36,
-            fontFamily: 'Fabled',
-            fontWeight: FontWeight.w400,
-            height: 1.50,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: const Color(0xFFD88E30),
@@ -107,147 +101,74 @@ class _AddProductPageState extends State<AddProductPage> {
           key: _formKey,
           child: ListView(
             children: [
-              // Nama Produk Field
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Nama Produk',
-                  style: TextStyle(
-                    color: const Color(0xFFD88E30),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Nama produk wajib diisi'
-                    : null,
-                style: const TextStyle(fontFamily: 'Poppins'),
-              ),
+              _buildTextField('Nama Produk', _nameController, 'Nama produk wajib diisi'),
               const SizedBox(height: 16),
-
-              // Harga Produk Field
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Harga Produk',
-                  style: TextStyle(
-                    color: const Color(0xFFD88E30),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-              TextFormField(
-                controller: _priceController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Harga produk wajib diisi'
-                    : null,
-                style: const TextStyle(fontFamily: 'Poppins'),
-              ),
+              _buildTextField('Harga Produk', _priceController, 'Harga produk wajib diisi',
+                  keyboardType: TextInputType.number),
               const SizedBox(height: 16),
-
-              // Store ID Field
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'ID Toko',
-                  style: TextStyle(
-                    color: const Color(0xFFD88E30),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-              TextFormField(
-                controller: _storeIdController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: const Color(0xFFD88E30)), // Border color
-                  ),
-                ),
-                validator: (value) => value == null || value.isEmpty
-                    ? 'ID toko wajib diisi'
-                    : null,
-                style: const TextStyle(fontFamily: 'Poppins'),
-              ),
+              _buildTextField('ID Toko', _storeIdController, 'ID toko wajib diisi',
+                  keyboardType: TextInputType.number),
               const SizedBox(height: 16),
-
-              // Image Picker Button
               TextButton.icon(
                 onPressed: _pickImage,
-                icon: Icon(
-                  Icons.upload,
-                  color: const Color(0xFFD88E30),
-                ),
-                label: Text(
+                icon: const Icon(Icons.upload, color: Color(0xFFD88E30)),
+                label: const Text(
                   'Pilih Gambar Produk',
-                  style: TextStyle(
-                    color: const Color(0xFFD88E30),
-                    fontFamily: 'Poppins',
-                  ),
+                  style: TextStyle(color: Color(0xFFD88E30)),
                 ),
               ),
               if (_selectedImage != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
-                    'Gambar Terpilih: ${_selectedImage!.name}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.green[700],
-                      fontFamily: 'Poppins',
-                    ),
+                    'Gambar Terpilih: ${_selectedImage!.path.split('/').last}',
+                    style: const TextStyle(fontSize: 14, color: Colors.green),
                   ),
                 ),
               const SizedBox(height: 16),
-
-              // Submit Button
-              Center(
-                child: ElevatedButton(
-                  onPressed: _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD88E30),
-                    foregroundColor: Colors.white,
-                    fixedSize: const Size(384, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    textStyle: const TextStyle(fontFamily: 'Poppins'),
+              ElevatedButton(
+                onPressed: _submitForm,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFD88E30),
+                  foregroundColor: Colors.white,
+                  fixedSize: const Size(384, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text('Simpan'),
                 ),
+                child: const Text('Simpan'),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller, String errorText,
+      {TextInputType keyboardType = TextInputType.text}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            label,
+            style: const TextStyle(color: Color(0xFFD88E30), fontSize: 16),
+          ),
+        ),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFFD88E30)),
+            ),
+          ),
+          validator: (value) => value == null || value.isEmpty ? errorText : null,
+        ),
+      ],
     );
   }
 }

@@ -119,11 +119,12 @@ class ProductCard extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EditProductPage(productId: product.id),
+                      builder: (context) => EditProductPage(product: product),
                     ),
                   );
                 },
               ),
+
               IconButton(
                 icon: SvgPicture.asset(
                   'assets/images/delete.svg',
