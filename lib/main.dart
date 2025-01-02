@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           ).copyWith(secondary: Colors.deepPurple[400]),
         ),
 
-        home: CatalogStores() // SplashScreen()
+        home:  SplashScreen()
 
       ),
     );

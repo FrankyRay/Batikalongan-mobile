@@ -4,6 +4,7 @@ import 'package:batikalongan_mobile/catalog/screens/edit_store.dart';
 import 'package:batikalongan_mobile/catalog/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:batikalongan_mobile/config/config.dart';
 
 class StoreDetail extends StatefulWidget {
   final Store store;
@@ -19,8 +20,8 @@ class StoreDetail extends StatefulWidget {
 
 class _StoreDetailState extends State<StoreDetail> {
   Future<List<Product>> fetchStoreProducts() async {
-    const String url = 'http://127.0.0.1:8000/catalog/products/json/';
-    const String storeUrl = 'http://127.0.0.1:8000/catalog/json/';
+    const String url = Config.baseUrl + '/catalog/products/json/';
+    const String storeUrl =Config.baseUrl +  '/catalog/json/';
 
     // First fetch stores to resolve foreign keys
     final storeResponse = await http.get(Uri.parse(storeUrl));
